@@ -63,6 +63,48 @@ Copy the following files/folders to the root of your Home Assistant installation
 homeassistant:
   packages: !include_dir_named packages/
 ```
+Update noitice for 2023.6 work around until I update the package, add this on 2023.6.0 onwards
+
+Goto config.yaml and were the packages: !include line is, make it look like this instead
+
+```yaml
+homeassistant:
+  packages: 
+      !include_dir_named packages/
+command_line: !include command_line.yaml
+```
+
+create a file on your config folder and call it command_line.yaml in this paste 
+
+``` #hki command line
+# Latest HKI Version
+  - sensor:
+      name: HKI Latest Version
+      command: "curl -s https://jimz011.github.io/homekit-infused/version | grep  'Current Version' | sed 's/Current Version: //'"
+      scan_interval: 21600
+
+# Latest Compatible HA Version
+  - sensor:
+      name: Latest Compatible HA Version
+      command: "curl -s https://jimz011.github.io/homekit-infused/version_compatible | grep  'Latest Compatible Version' | sed 's/Latest Compatible Version: //'"
+      scan_interval: 21600
+
+# Latest Home Assistant Version
+  - sensor:
+      name: Home Assistant Latest Version
+      command: "curl -s https://www.home-assistant.io | grep  'Current Version' | sed 's/Current Version: //'"
+      scan_interval: 21600
+ ```
+ 
+ then open up First go to folder \packages\homekit-infused\hki_sensors.yaml file and find the same sensors from above, but they will look like this 
+ 
+ ```  - platform: command_line
+    name: HKI Latest Version
+    command: "curl -s https://jimz011.github.io/homekit-infused/version | grep  'Current Version' | sed 's/Current Version: //'"
+    scan_interval: 21600
+ ```
+ 
+ delete all 3 of the sensors (Latest HKI version,  latest compatible ha version, home assistant version) and then restart and its done
 
 Optionally you can add the images folder to your setup (it has some useful images that you might want to use):
 - Copy the `/www/` folder to the root of your setup
